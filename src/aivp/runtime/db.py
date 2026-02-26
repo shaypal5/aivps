@@ -64,9 +64,7 @@ def bootstrap_sqlite(
         row = conn.execute(
             "SELECT migration_version FROM schema_state WHERE id = 1"
         ).fetchone()
-        migration_version = (
-            initial_migration_version if row is None else str(row[0])
-        )
+        migration_version = initial_migration_version if row is None else str(row[0])
 
         journal_mode_row = conn.execute("PRAGMA journal_mode").fetchone()
         journal_mode = (
