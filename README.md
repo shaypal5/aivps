@@ -17,6 +17,15 @@ This repository currently contains:
 3. Run scaffold health check:
    - `aivp doctor`
 
+## Daemon Commands
+
+- Start daemon loop (foreground):
+  - `aivp daemon start --pid-file runtime/daemon.pid`
+- Stop daemon:
+  - `aivp daemon stop --pid-file runtime/daemon.pid`
+- Restart daemon:
+  - `aivp daemon restart --pid-file runtime/daemon.pid`
+
 ## Repository Layout
 
 - `src/aivp/` Python package scaffold
