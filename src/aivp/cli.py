@@ -66,7 +66,9 @@ def build_parser() -> argparse.ArgumentParser:
     daemon = subparsers.add_parser("daemon", help="Daemon lifecycle controls.")
     daemon_subparsers = daemon.add_subparsers(dest="daemon_command", required=True)
 
-    daemon_start = daemon_subparsers.add_parser("start", help="Start foreground daemon.")
+    daemon_start = daemon_subparsers.add_parser(
+        "start", help="Start foreground daemon."
+    )
     daemon_start.add_argument("--pid-file", default="runtime/daemon.pid")
     daemon_start.add_argument("--heartbeat-seconds", type=float, default=30.0)
     daemon_start.add_argument("--max-heartbeats", type=int)

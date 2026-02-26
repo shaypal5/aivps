@@ -31,7 +31,9 @@ class PidFileLockTests(unittest.TestCase):
                 lock = PidFileLock(pid_file)
                 lock.acquire()
                 try:
-                    self.assertEqual(pid_file.read_text(encoding="utf-8"), str(os.getpid()))
+                    self.assertEqual(
+                        pid_file.read_text(encoding="utf-8"), str(os.getpid())
+                    )
                 finally:
                     lock.release()
 
@@ -42,7 +44,9 @@ class DaemonRunnerTests(unittest.TestCase):
             pid_file = Path(tmpdir) / "daemon.pid"
             pid_file.write_text(str(os.getpid()), encoding="utf-8")
 
-            result = DaemonRunner(pid_file).start(max_heartbeats=1, heartbeat_seconds=0.01)
+            result = DaemonRunner(pid_file).start(
+                max_heartbeats=1, heartbeat_seconds=0.01
+            )
             self.assertEqual(result.status, "already_running")
 
     def test_stop_removes_stale_pid_file(self) -> None:
@@ -71,4 +75,3 @@ class DaemonRunnerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
