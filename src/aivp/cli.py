@@ -7,6 +7,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
+from aivp.runtime.db import bootstrap_sqlite
 from aivp.runtime.daemon import DaemonRunner
 from aivp.server.app import ServerConfig, build_server_summary
 
@@ -44,6 +45,15 @@ def _cmd_daemon_restart(args: argparse.Namespace) -> int:
     )
     print(json.dumps(asdict(result), indent=2))
     return 0
+
+
+def _cmd_db_init(args: argparse.Namespace) -> int:
+    result = bootstrap_sqlite(
+        db_path=Path(args.db_path).resolve(),
+        initial_migration_version=args.migration_version,
+    )
+    print(json.dumps(asdict(result), indent=2))
+    return 0 if result.wal_enabled else 1
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -93,6 +103,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Maximum number of heartbeat sleep cycles before exiting.",
     )
     daemon_restart.set_defaults(func=_cmd_daemon_restart)
+
+    db = subparsers.add_parser("db", help="Runtime database operations.")
+    db_subparsers = db.add_subparsers(dest="db_command", required=True)
+
+    db_init = db_subparsers.add_parser(
+        "init",
+        help="Initialize runtime SQLite DB with WAL mode and schema state table.",
+    )
+    db_init.add_argument("--db-path", default="runtime/db/aivp.sqlite3")
+    db_init.add_argument("--migration-version", default="v1alpha1")
+    db_init.set_defaults(func=_cmd_db_init)
 
     return parser
 

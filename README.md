@@ -31,6 +31,11 @@ Notes:
 - `daemon start` returns a non-zero exit code when a daemon is already running for the same PID file.
 - Use `aivp daemon --help` and subcommand `--help` for additional options.
 
+## Database Commands
+
+- Initialize runtime SQLite DB (WAL + schema state table):
+  - `aivp db init --db-path runtime/db/aivp.sqlite3 --migration-version v1alpha1`
+
 ## Repository Layout
 
 - `src/aivp/` Python package scaffold
