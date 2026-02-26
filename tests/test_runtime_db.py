@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
@@ -39,6 +40,27 @@ class RuntimeDbBootstrapTests(unittest.TestCase):
             # Simulate restart by reinitializing and rereading state.
             bootstrap_sqlite(db_path, initial_migration_version="v0")
             self.assertEqual(get_migration_version(db_path), "v1alpha2")
+
+    def test_get_migration_version_returns_none_when_db_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            db_path = Path(tmpdir) / "runtime" / "db" / "missing.sqlite3"
+            self.assertFalse(db_path.exists())
+
+            version = get_migration_version(db_path)
+
+            self.assertIsNone(version)
+            self.assertFalse(db_path.exists())
+
+    def test_get_migration_version_returns_none_when_table_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            db_path = Path(tmpdir) / "runtime" / "db" / "existing.sqlite3"
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+            with sqlite3.connect(db_path) as conn:
+                conn.execute("CREATE TABLE sample (id INTEGER PRIMARY KEY)")
+                conn.commit()
+
+            version = get_migration_version(db_path)
+            self.assertIsNone(version)
 
 
 if __name__ == "__main__":

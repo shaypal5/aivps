@@ -6,6 +6,14 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
+SCHEMA_STATE_TABLE_DDL = """
+CREATE TABLE IF NOT EXISTS schema_state (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    migration_version TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+"""
+
 
 @dataclass(frozen=True)
 class DbBootstrapResult:
@@ -25,6 +33,10 @@ def _normalize_journal_mode(mode: str) -> str:
     return mode.strip().lower()
 
 
+def _ensure_schema_state_table(conn: sqlite3.Connection) -> None:
+    conn.execute(SCHEMA_STATE_TABLE_DDL)
+
+
 def bootstrap_sqlite(
     db_path: Path,
     initial_migration_version: str = "v1alpha1",
@@ -35,33 +47,26 @@ def bootstrap_sqlite(
         conn.execute("PRAGMA synchronous=NORMAL")
         conn.execute("PRAGMA foreign_keys=ON")
 
-        conn.execute(
+        _ensure_schema_state_table(conn)
+
+        created_state_row = False
+        cursor = conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS schema_state (
-                id INTEGER PRIMARY KEY CHECK (id = 1),
-                migration_version TEXT NOT NULL,
-                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )
-            """
+            INSERT INTO schema_state (id, migration_version)
+            VALUES (1, ?)
+            ON CONFLICT(id) DO NOTHING
+            """,
+            (initial_migration_version,),
         )
+        if cursor.rowcount and cursor.rowcount > 0:
+            created_state_row = True
 
         row = conn.execute(
             "SELECT migration_version FROM schema_state WHERE id = 1"
         ).fetchone()
-        created_state_row = False
-
-        if row is None:
-            conn.execute(
-                """
-                INSERT INTO schema_state (id, migration_version)
-                VALUES (1, ?)
-                """,
-                (initial_migration_version,),
-            )
-            migration_version = initial_migration_version
-            created_state_row = True
-        else:
-            migration_version = str(row[0])
+        migration_version = (
+            initial_migration_version if row is None else str(row[0])
+        )
 
         journal_mode_row = conn.execute("PRAGMA journal_mode").fetchone()
         journal_mode = (
@@ -82,10 +87,19 @@ def bootstrap_sqlite(
 
 
 def get_migration_version(db_path: Path) -> str | None:
+    if not db_path.exists():
+        return None
+
     with _connect(db_path) as conn:
-        row = conn.execute(
-            "SELECT migration_version FROM schema_state WHERE id = 1"
-        ).fetchone()
+        try:
+            row = conn.execute(
+                "SELECT migration_version FROM schema_state WHERE id = 1"
+            ).fetchone()
+        except sqlite3.OperationalError as exc:
+            if "no such table: schema_state" in str(exc):
+                return None
+            raise
+
         if row is None:
             return None
         return str(row[0])
@@ -93,15 +107,7 @@ def get_migration_version(db_path: Path) -> str | None:
 
 def set_migration_version(db_path: Path, migration_version: str) -> None:
     with _connect(db_path) as conn:
-        conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS schema_state (
-                id INTEGER PRIMARY KEY CHECK (id = 1),
-                migration_version TEXT NOT NULL,
-                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )
-            """
-        )
+        _ensure_schema_state_table(conn)
         conn.execute(
             """
             INSERT INTO schema_state (id, migration_version)
