@@ -29,5 +29,6 @@ This repository currently contains:
 ## Design Docs
 
 - [System Design](docs/coding-agents/aivp-v1-system-design.md)
+- [v1 Scope and Non-Goals](docs/coding-agents/v1-scope-and-non-goals.md)
 - [ADR Index](docs/coding-agents/adrs/README.md)
 - [Implementation Roadmap](docs/coding-agents/implementation-roadmap.md)

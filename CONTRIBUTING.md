@@ -24,3 +24,5 @@
 - Use focused PRs with clear scope.
 - Include test/validation notes in PR description.
 - For security-sensitive changes, include policy impact notes.
+- For architecture-impacting changes, include an `ADR:` reference in the PR description.
+- If no ADR applies, include `ADR: none (reason)` in the PR description.
