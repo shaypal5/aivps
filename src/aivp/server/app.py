@@ -16,7 +16,10 @@ class ServerConfig:
 
 def build_server_summary(config: ServerConfig) -> dict[str, object]:
     """Return a minimal health summary for local scaffolding checks."""
-    summary = asdict(config)
+    summary = {
+        key: str(value) if isinstance(value, Path) else value
+        for key, value in asdict(config).items()
+    }
     summary["paths_exist"] = {
         "root_dir": config.root_dir.exists(),
         "db_parent": config.db_path.parent.exists(),
