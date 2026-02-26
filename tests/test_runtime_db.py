@@ -1,0 +1,46 @@
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+from aivp.runtime.db import (
+    bootstrap_sqlite,
+    get_migration_version,
+    set_migration_version,
+)
+
+
+class RuntimeDbBootstrapTests(unittest.TestCase):
+    def test_bootstrap_is_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            db_path = Path(tmpdir) / "runtime" / "db" / "aivp.sqlite3"
+
+            first = bootstrap_sqlite(db_path, initial_migration_version="v1alpha1")
+            second = bootstrap_sqlite(db_path, initial_migration_version="v9ignored")
+
+            self.assertTrue(first.wal_enabled)
+            self.assertEqual(first.journal_mode, "wal")
+            self.assertTrue(first.created_state_row)
+
+            self.assertFalse(second.created_state_row)
+            self.assertEqual(second.migration_version, "v1alpha1")
+            self.assertEqual(get_migration_version(db_path), "v1alpha1")
+
+    def test_migration_version_persists_across_restarts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            db_path = Path(tmpdir) / "runtime" / "db" / "aivp.sqlite3"
+
+            bootstrap_sqlite(db_path, initial_migration_version="v1alpha1")
+            set_migration_version(db_path, "v1alpha2")
+
+            self.assertEqual(get_migration_version(db_path), "v1alpha2")
+
+            # Simulate restart by reinitializing and rereading state.
+            bootstrap_sqlite(db_path, initial_migration_version="v0")
+            self.assertEqual(get_migration_version(db_path), "v1alpha2")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
