@@ -34,7 +34,7 @@ def _cmd_daemon_start(args: argparse.Namespace) -> int:
 def _cmd_daemon_stop(args: argparse.Namespace) -> int:
     result = DaemonRunner(Path(args.pid_file).resolve()).stop()
     print(json.dumps(asdict(result), indent=2))
-    return 0
+    return 0 if result.status in {"stopped", "not_running"} else 1
 
 
 def _cmd_daemon_restart(args: argparse.Namespace) -> int:
@@ -71,7 +71,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     daemon_start.add_argument("--pid-file", default="runtime/daemon.pid")
     daemon_start.add_argument("--heartbeat-seconds", type=float, default=30.0)
-    daemon_start.add_argument("--max-heartbeats", type=int)
+    daemon_start.add_argument(
+        "--max-heartbeats",
+        type=int,
+        help="Maximum number of heartbeat sleep cycles before exiting.",
+    )
     daemon_start.set_defaults(func=_cmd_daemon_start)
 
     daemon_stop = daemon_subparsers.add_parser("stop", help="Stop daemon by pid file.")
@@ -83,7 +87,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     daemon_restart.add_argument("--pid-file", default="runtime/daemon.pid")
     daemon_restart.add_argument("--heartbeat-seconds", type=float, default=30.0)
-    daemon_restart.add_argument("--max-heartbeats", type=int)
+    daemon_restart.add_argument(
+        "--max-heartbeats",
+        type=int,
+        help="Maximum number of heartbeat sleep cycles before exiting.",
+    )
     daemon_restart.set_defaults(func=_cmd_daemon_restart)
 
     return parser
