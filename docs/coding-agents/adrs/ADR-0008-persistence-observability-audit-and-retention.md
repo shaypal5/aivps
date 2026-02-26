@@ -31,4 +31,3 @@ To operate safely, aivp needs strong local observability and auditability while 
 - Logs-only observability.
 - No signed audit mechanism.
 - Unlimited retention of all payloads.
-

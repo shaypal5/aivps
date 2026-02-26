@@ -26,4 +26,3 @@ class AgentConfig(BaseModel):
     trigger: TriggerConfig
     steps: list[StepRef] = Field(default_factory=list)
     created_at: datetime | None = None
-

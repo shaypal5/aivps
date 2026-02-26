@@ -29,4 +29,3 @@ Multiple agents compete for constrained API and LLM budgets. The system must enf
 - Single flat quota model only.
 - Strict hard-stop behavior for all agents at cap hit.
 - One-model-for-all routing.
-

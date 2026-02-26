@@ -31,4 +31,3 @@ Integration access must be secure and operationally reliable while preserving lo
 - Store all credentials in plain env files only.
 - Inline attachment bytes directly into LLM prompts by default.
 - Silent auto-update of integrations and skill packs.
-

@@ -24,4 +24,3 @@ def build_server_summary(config: ServerConfig) -> dict[str, object]:
         "backups_dir": config.backups_dir.exists(),
     }
     return summary
-

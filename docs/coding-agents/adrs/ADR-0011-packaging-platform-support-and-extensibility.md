@@ -31,4 +31,3 @@ The project needs fast iteration for v1 while preserving a path to stronger ecos
 - App-bundle-only release strategy.
 - No lockfiles or provenance metadata.
 - Unstable internal-only plugin surfaces indefinitely.
-

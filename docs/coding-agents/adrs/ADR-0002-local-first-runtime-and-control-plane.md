@@ -33,4 +33,3 @@ The system must run robustly on laptops that sleep, wake, and disconnect frequen
 - Single-process async-only execution for all runs.
 - Multiple domain-specific databases in v1.
 - Server-first hosted architecture.
-

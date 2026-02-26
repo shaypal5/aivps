@@ -26,4 +26,3 @@ aivp is intended as a local-first framework for narrowly scoped "AI VP" agents w
 - Broad personal assistant framing with wider default permissions.
 - Multi-user or collaborative design in v1.
 - App-bundle-first distribution in v1.
-

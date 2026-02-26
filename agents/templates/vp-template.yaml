@@ -12,4 +12,3 @@ steps:
     skill: sheets.append_expense_rows
   - id: report
     skill: telegram.post_status_report
-

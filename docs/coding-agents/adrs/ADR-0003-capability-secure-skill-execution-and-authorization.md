@@ -36,4 +36,3 @@ aivp requires strict least-privilege behavior. Agents should not directly hold b
 - Prompt-only permission enforcement.
 - Direct in-process agent access to integration libraries.
 - Allow-by-default outbound network model.
-

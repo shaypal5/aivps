@@ -1,7 +1,7 @@
 # aivp v1 System Design (Locked)
 
-Status: Draft for implementation  
-Date: 2026-02-26  
+Status: Draft for implementation
+Date: 2026-02-26
 Scope: Local-first single-user framework for "AI VPs" on laptops (macOS first, Linux close second)
 
 ## 1. Product Characterization

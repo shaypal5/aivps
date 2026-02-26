@@ -27,4 +27,3 @@ Laptop-first systems miss time windows due to sleep, shutdown, and offline perio
 - At-most-once delivery with dropped missed windows.
 - Execute entire backlog immediately after restart.
 - Newest-first catch-up.
-

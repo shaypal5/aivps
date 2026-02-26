@@ -10,4 +10,3 @@ Expected structure:
   - license
   - permission scope
   - input/output contract
-

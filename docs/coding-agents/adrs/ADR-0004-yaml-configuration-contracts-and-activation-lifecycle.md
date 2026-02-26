@@ -34,4 +34,3 @@ The product is YAML-first for users, but must stay safe and evolvable over time.
 - Free-form configs with best-effort runtime checks.
 - Immediate live mutation without staged activation.
 - Unversioned prompts and contracts.
-

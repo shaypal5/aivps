@@ -1,7 +1,7 @@
 # aivp v1 Implementation Roadmap
 
-Status: Proposed execution plan  
-Date: 2026-02-26  
+Status: Proposed execution plan
+Date: 2026-02-26
 Inputs: ADR-0001 through ADR-0012
 
 ## 1. Scope
@@ -335,4 +335,3 @@ Acceptance criteria:
   - ADR index and files,
   - operator runbook,
   - custom skill developer guide.
-

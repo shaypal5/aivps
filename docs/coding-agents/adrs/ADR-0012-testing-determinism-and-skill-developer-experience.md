@@ -28,4 +28,3 @@ The platform depends on external APIs and time-based triggers, so deterministic 
 - No deterministic mode.
 - Tests required for all skills in v1.
 - Docs-only custom skill developer workflow.
-

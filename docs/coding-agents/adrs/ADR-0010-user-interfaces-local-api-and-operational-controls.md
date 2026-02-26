@@ -28,4 +28,3 @@ Users need safe and practical local controls for defining, monitoring, and pausi
 - UI-only control model with no local API.
 - No auth on local interfaces.
 - Manual backup via file copies only.
-
