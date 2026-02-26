@@ -1,0 +1,14 @@
+schema_version: v1alpha1
+id: vp-example
+name: VP of Example Task
+timezone: America/New_York
+trigger:
+  type: schedule
+  every_minutes: 10
+steps:
+  - id: fetch_input
+    skill: gmail.fetch_consulting_expense_emails
+  - id: update_sheet
+    skill: sheets.append_expense_rows
+  - id: report
+    skill: telegram.post_status_report
