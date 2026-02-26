@@ -17,6 +17,20 @@ This repository currently contains:
 3. Run scaffold health check:
    - `aivp doctor`
 
+## Daemon Commands
+
+- Start daemon loop (foreground):
+  - `aivp daemon start --pid-file runtime/daemon.pid [--heartbeat-seconds N] [--max-heartbeats M]`
+- Stop daemon:
+  - `aivp daemon stop --pid-file runtime/daemon.pid`
+- Restart daemon:
+  - `aivp daemon restart --pid-file runtime/daemon.pid [--heartbeat-seconds N] [--max-heartbeats M]`
+
+Notes:
+- `daemon stop` is idempotent and returns success when the daemon is already stopped.
+- `daemon start` returns a non-zero exit code when a daemon is already running for the same PID file.
+- Use `aivp daemon --help` and subcommand `--help` for additional options.
+
 ## Repository Layout
 
 - `src/aivp/` Python package scaffold
