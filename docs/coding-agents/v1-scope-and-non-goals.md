@@ -1,7 +1,7 @@
 # aivp v1 Scope and Non-Goals
 
-Status: Approved baseline for v1 delivery  
-Date: 2026-02-26  
+Status: Approved baseline for v1 delivery
+Date: 2026-02-26
 Primary reference: ADR-0001
 
 ## 1. Scope Statement
@@ -48,4 +48,3 @@ Tracking issues:
 - v1 scope doc (in/out): covered by sections 1-3.
 - explicit non-goals list: covered by section 4.
 - deferred features list tracked as post-v1: covered by section 5 and linked issues.
-
