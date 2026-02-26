@@ -113,4 +113,3 @@ def set_migration_version(db_path: Path, migration_version: str) -> None:
             (migration_version,),
         )
         conn.commit()
-
