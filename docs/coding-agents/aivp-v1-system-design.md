@@ -44,7 +44,7 @@ flowchart LR
 
 - Permission baseline: enforced capability tokens/checks in runtime, not prompt-only controls.
 - Enforcement location: central policy layer + central skill executor.
-- Skill usage pattern: agents request allowed registered skills with constrained parameters; server executes non-agentically using stored secrets.
+- Skill usage pattern: agents request allowed skills from a global skill pool; server executes non-agentically using stored secrets.
 - Policy precedence: explicit `deny` always wins; then nearest-scope `allow`.
 - Approval model: policy DSL by action/resource/risk with per-agent "no-ask" override support.
 - Risk flow: policy-triggered plan/preview before high-risk actions.
@@ -63,7 +63,10 @@ flowchart LR
 - Conflict handling: file-backed source of truth with revision checks + write locks.
 - Prompt governance: versioned prompt artifacts pinned per run.
 - Structured outputs: schema validation + retry/repair loop.
-- Skill contracts: Python-first typed models (Pydantic) with exported JSON Schema.
+- Skill definition standard: `SKILL.md` with required machine-readable frontmatter for enforceable contracts.
+- Skill contract source of truth: imported skill pool registry, separate from per-agent bindings.
+- Agent skill bindings: alias + optional argument constraints/overrides (`fixed`) without redefining full skill interfaces.
+- Skill contracts remain Python-extensible and exportable to JSON Schema for runtime validation.
 - Parameter constraints: declarative schema constraints enforced pre-exec (enum/range/pattern/date windows).
 - Compatibility checks: block activation when contract changes broaden/break permissions unexpectedly.
 
@@ -128,6 +131,7 @@ flowchart LR
 - First-run UX: guided setup wizard + starter templates.
 - Starter templates: curated, versioned local templates with required provenance metadata.
 - Template/skill provenance manifest: source, version/hash, license, permission scope.
+- Imported `SKILL.md` assets: local and Git import flows with validation feedback and lock metadata.
 
 ## 12. Packaging, Platform, and Extensibility
 
@@ -140,6 +144,7 @@ flowchart LR
 - Plugin strategy: versioned extension API with capability flags.
 - Release channels: stable + opt-in beta.
 - Update channel for integrations/skills: signed update feed with explicit user approval.
+- Skill import standard: full `SKILL.md` support for portable third-party skill packs.
 
 ## 13. Testing and Operability
 
@@ -162,6 +167,8 @@ config/
   migrations/
 skills/
   builtin/
+  imported/
+  lockfiles/
 agents/
   templates/
 runtime/
@@ -291,7 +298,7 @@ runtime/
 - D084 `B` signed tamper-evident audit bundles + plain exports.
 - D085 `B` curated versioned local starter templates.
 
-### 86-95 Additional Locked Decisions
+### 86-100 Additional Locked Decisions
 
 - D086 `B` support last 2-3 Python versions.
 - D087 `B` lock dependencies for runtime/core/templates.
@@ -303,6 +310,11 @@ runtime/
 - D093 `B` artifact retention tiers + dedupe/compression + GC.
 - D094 `B` stable + opt-in beta channels.
 - D095 `B` required provenance manifest for skills/templates.
+- D096 `B` full `SKILL.md` support with required contract frontmatter.
+- D097 `B` global skill pool separated from per-agent `skill_bindings`.
+- D098 `B` agent bindings may optionally fix any subset of skill arguments.
+- D099 `B` skill import from local/Git with provenance and hash pinning.
+- D100 `B` activation fails closed on missing or incompatible skill bindings.
 
 ## 17. Deferred/Future Upgrades Already Agreed
 
@@ -315,6 +327,7 @@ runtime/
 
 - Treat this document as normative for v1 unless a new decision supersedes an item.
 - Prefer server-enforced safety to prompt-level safety.
+- Treat `SKILL.md` Markdown instructions as guidance; enforce safety from contract fields + policy.
 - Any connector or skill implementation must explicitly declare:
   - input schema/constraints,
   - permission scope,
