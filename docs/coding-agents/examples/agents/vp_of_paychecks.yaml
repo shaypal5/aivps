@@ -1,0 +1,60 @@
+schema_version: v1alpha1
+kind: agent
+
+id: vp_documenting_consulting_expenses
+name: VP of Documenting Consulting Expenses
+timezone: Asia/Tel_Aviv
+
+trigger:
+  type: schedule
+  every_minutes: 600
+
+goal: |
+  Keep my consulting expenses sheet updated from Gmail, upload attached
+  invoices and receipts to the designated Drive folder, and post a run summary
+  to Telegram. The row in the expenses sheet should adhere to the existing
+  schema of the sheet, and it should include a link to the uploaded invoice
+  and/or receipt, if one was found and uploaded.
+
+  Use the source label "Consulting Expenses" to identify emails I've designated
+  for processing. Only search for emails for the last 90 days. Mark processed
+  emails with the label "vp_expenses_processed". Only consider inbox mail.
+  Exclude already-processed mail. For each successfully processed email, apply
+  the processed label.
+
+skill_bindings:
+  - as: find_candidate_emails
+    use: gmail.inbox_label_delta_scan
+    fixed:
+      label_name: "Consulting Expenses"
+      exclude_label_names: ["vp_expenses_processed"]
+      mailbox: inbox_only
+      lookback_days: 90
+
+  - as: read_expenses_sheet
+    use: gsheet.read_tab
+    fixed:
+      spreadsheet_id: "1abcDEFghiJKLmnopQRS"
+      tab: "Expenses"
+
+  - as: upload_attachment
+    use: gdrive.upload_attachment
+    fixed:
+      folder_id: "0BxxEXPENSESfOLDER123"
+
+  - as: append_expense_row
+    use: gsheet.append_row
+    fixed:
+      spreadsheet_id: "1abcDEFghiJKLmnopQRS"
+      tab: "Expenses"
+
+  - as: mark_processed
+    use: gmail.apply_label
+    fixed:
+      label_name: "vp_expenses_processed"
+      require_existing_labels: ["Consulting Expenses"]
+
+  - as: post_report
+    use: telegram.post_message
+    fixed:
+      channel_id: "-1001234567890"

@@ -18,3 +18,4 @@ This folder contains accepted Architecture Decision Records derived from:
 - [ADR-0010 User Interfaces, Local API, and Operational Controls](./ADR-0010-user-interfaces-local-api-and-operational-controls.md)
 - [ADR-0011 Packaging, Platform Support, and Extensibility](./ADR-0011-packaging-platform-support-and-extensibility.md)
 - [ADR-0012 Testing, Determinism, and Skill Developer Experience](./ADR-0012-testing-determinism-and-skill-developer-experience.md)
+- [ADR-0013 SKILL.md Standard, Skill Pool, and Agent Binding Separation](./ADR-0013-skillmd-standard-skill-pool-and-agent-bindings.md)

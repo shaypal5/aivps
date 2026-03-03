@@ -122,15 +122,19 @@ Goal:
 - Build strongly validated, versioned, and reversible configuration lifecycle.
 
 Issues:
-1. Define YAML schemas for agent, skill refs, triggers, policies.
-2. Add `schema_version` enforcement and migration CLI.
-3. Add YAML include/import loader with cycle detection.
-4. Implement draft -> validate -> activate flow.
-5. Implement rollback on invalid activation.
-6. Add prompt artifact version pinning.
-7. Add structured-output schemas and repair retry loop.
-8. Implement compatibility checks on permission broadening/breaking contract changes.
-9. Persist immutable run snapshots (config/prompt/skill/policy hashes).
+1. Define YAML schemas for agent goals/inputs/triggers/policies and `skill_bindings`.
+2. Define `SKILL.md` contract frontmatter schema and validation rules.
+3. Implement `SKILL.md` parser and registry ingestion pipeline.
+4. Implement global skill pool store (builtin + imported) with lockfile/provenance metadata.
+5. Implement import commands for local and Git `SKILL.md` skill packs.
+6. Add `schema_version` enforcement and migration CLI.
+7. Add YAML include/import loader with cycle detection.
+8. Implement draft -> validate -> activate flow.
+9. Implement rollback on invalid activation.
+10. Add prompt artifact version pinning.
+11. Add structured-output schemas and repair retry loop.
+12. Implement compatibility checks on permission broadening/breaking contract changes, including binding/skill compatibility.
+13. Persist immutable run snapshots (config/prompt/skill/policy hashes).
 
 Acceptance criteria:
 - Invalid config never reaches active state.
@@ -262,11 +266,11 @@ Goal:
 Issues:
 1. Define supported Python versions and CI matrix.
 2. Create dependency locking workflow for runtime and templates.
-3. Implement skill/template lockfile with provenance fields.
+3. Implement skill/template lockfile with provenance fields for imported `SKILL.md` assets.
 4. Implement explicit upgrade command with preflight and rollback snapshot.
 5. Implement release-channel config (stable/beta).
 6. Define versioned plugin API and capability flags.
-7. Add Git-based import path for skills/templates with hash pinning.
+7. Add Git-based import path for `SKILL.md` skill packs/templates with hash pinning.
 8. Add v1 boundary checks for single-user mode.
 9. Add future issue for macOS bundle packaging.
 
@@ -322,6 +326,9 @@ Acceptance criteria:
 18. `reliability: retry/backoff/circuit-breaker policy`
 19. `reliability: dead-letter queue and replay api`
 20. `security: egress allowlist enforcement`
+21. `config: SKILL.md importer and skill pool registry`
+22. `config: validate agent skill_bindings against skill pool contracts`
+23. `cli: import SKILL.md skill packs from local/Git with lockfile pinning`
 
 ## 6. Definition of Done (v1)
 

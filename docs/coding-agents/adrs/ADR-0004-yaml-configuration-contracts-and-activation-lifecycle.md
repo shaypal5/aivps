@@ -21,7 +21,7 @@ The product is YAML-first for users, but must stay safe and evolvable over time.
 - Capture immutable per-run snapshots of config, prompt, skill, and policy hashes.
 - Apply draft -> validate -> activate workflow with rollback on invalid changes.
 - Block activation when contract changes break compatibility or widen permissions unexpectedly.
-- Define skill contracts using typed Python models with JSON Schema export.
+- Define skill contracts via `SKILL.md` frontmatter imported into the skill pool (see ADR-0013), while allowing Python SDK types to emit equivalent JSON Schema.
 
 ## Consequences
 

@@ -23,3 +23,5 @@ runtime/artifacts/*
 runtime/backups/*
 !runtime/artifacts/.gitkeep
 !runtime/backups/.gitkeep
+
+.DS_Store
