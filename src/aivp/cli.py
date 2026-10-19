@@ -7,8 +7,8 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from aivp.runtime.db import bootstrap_sqlite
 from aivp.runtime.daemon import DaemonRunner
+from aivp.runtime.db import bootstrap_sqlite
 from aivp.server.app import ServerConfig, build_server_summary
 
 
