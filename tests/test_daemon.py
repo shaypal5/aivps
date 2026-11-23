@@ -71,12 +71,14 @@ class DaemonRunnerTests(unittest.TestCase):
             pid_file = Path(tmpdir) / "daemon.pid"
             pid_file.write_text("1234", encoding="utf-8")
 
-            with patch(
-                "aivp.runtime.daemon.pid_is_running",
-                side_effect=[True, False, False],
+            with (
+                patch(
+                    "aivp.runtime.daemon.pid_is_running",
+                    side_effect=[True, False, False],
+                ),
+                patch("aivp.runtime.daemon.os.kill") as kill_mock,
             ):
-                with patch("aivp.runtime.daemon.os.kill") as kill_mock:
-                    result = DaemonRunner(pid_file).stop()
+                result = DaemonRunner(pid_file).stop()
 
             self.assertEqual(result.status, "stopped")
             kill_mock.assert_called_once_with(1234, signal.SIGTERM)
@@ -110,16 +112,17 @@ class DaemonRunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             runner = DaemonRunner(Path(tmpdir) / "daemon.pid")
 
-            with patch.object(
-                runner,
-                "stop",
-                return_value=DaemonActionResult(
-                    status="stopped",
-                    message="stopped",
-                    pid=111,
+            with (
+                patch.object(
+                    runner,
+                    "stop",
+                    return_value=DaemonActionResult(
+                        status="stopped",
+                        message="stopped",
+                        pid=111,
+                    ),
                 ),
-            ):
-                with patch.object(
+                patch.object(
                     runner,
                     "start",
                     return_value=DaemonActionResult(
@@ -127,11 +130,12 @@ class DaemonRunnerTests(unittest.TestCase):
                         message="started",
                         pid=222,
                     ),
-                ) as start_mock:
-                    result = runner.restart(
-                        heartbeat_seconds=0.25,
-                        max_heartbeats=5,
-                    )
+                ) as start_mock,
+            ):
+                result = runner.restart(
+                    heartbeat_seconds=0.25,
+                    max_heartbeats=5,
+                )
 
             self.assertEqual(result.status, "restart_complete")
             start_mock.assert_called_once_with(
@@ -143,17 +147,19 @@ class DaemonRunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             runner = DaemonRunner(Path(tmpdir) / "daemon.pid")
 
-            with patch.object(
-                runner,
-                "stop",
-                return_value=DaemonActionResult(
-                    status="stop_requested",
-                    message="still running",
-                    pid=333,
+            with (
+                patch.object(
+                    runner,
+                    "stop",
+                    return_value=DaemonActionResult(
+                        status="stop_requested",
+                        message="still running",
+                        pid=333,
+                    ),
                 ),
+                patch.object(runner, "start") as start_mock,
             ):
-                with patch.object(runner, "start") as start_mock:
-                    result = runner.restart()
+                result = runner.restart()
 
             self.assertEqual(result.status, "already_running")
             start_mock.assert_not_called()
